@@ -309,39 +309,3 @@ def match_images(img1_path, img2_path, ratio_threshold=0.75, use_flann=True,
     return results
 
 
-def main():
-    """主函数 - 示例用法"""
-    # 设置示例图像路径（请替换为实际图像路径）
-    img1_path = "/Users/zqli/Desktop/大三上/计算机视觉/code/hw3/SIFT/image1.jpg"
-    img2_path = "/Users/zqli/Desktop/大三上/计算机视觉/code/hw3/SIFT/image2.jpg"
-    
-    # 检查文件是否存在
-    if not Path(img1_path).exists() or not Path(img2_path).exists():
-        print("错误：找不到示例图像文件")
-        print("请将两张要匹配的图像命名为 image1.jpg 和 image2.jpg")
-        print("或修改代码中的图像路径")
-        return
-    
-    # 执行匹配
-    results = match_images(
-        img1_path=img1_path,
-        img2_path=img2_path,
-        ratio_threshold=0.75,  # Lowe's ratio test阈值
-        use_flann=True,        # 使用FLANN匹配器
-        save_results=True,     # 保存结果
-        output_dir="output"    # 输出目录
-    )
-    
-    # 打印统计信息
-    print("\n=== 匹配统计 ===")
-    print(f"图像1特征点数: {len(results['keypoints1'])}")
-    print(f"图像2特征点数: {len(results['keypoints2'])}")
-    print(f"匹配点对数: {len(results['matches'])}")
-    if results['homography'] is not None:
-        inliers = np.sum(results['inlier_mask'])
-        print(f"RANSAC内点数: {inliers}")
-        print(f"内点比例: {inliers/len(results['matches'])*100:.2f}%")
-
-
-if __name__ == "__main__":
-    main()

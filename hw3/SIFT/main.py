@@ -17,21 +17,20 @@ plt.rcParams['axes.unicode_minus'] = False
 class SIFTMatcher:
     """SIFT特征匹配器（使用自实现的SIFT）"""
     
-    def __init__(self, ratio_threshold=0.75, use_my_sift=True, fast_mode=False):
+    def __init__(self, ratio_threshold=0.75, use_my_sift=True):
         """
         初始化匹配器
         
         Args:
             ratio_threshold: Lowe's ratio test的阈值
             use_my_sift: 是否使用自实现的SIFT（True）或OpenCV的SIFT（False）
-            fast_mode: 快速模式（减少特征点以加速计算）
         """
         self.ratio_threshold = ratio_threshold
         self.use_my_sift = use_my_sift
         
         if use_my_sift:
-            self.sift = MySIFT(num_octaves=4, num_scales=5, sigma=1.6, fast_mode=fast_mode)
-            print(f"使用自实现的SIFT算法 {'[快速模式]' if fast_mode else ''}")
+            self.sift = MySIFT(num_octaves=4, num_scales=5, sigma=1.6)
+            print("使用自实现的SIFT算法")
         else:
             self.sift = cv2.SIFT_create()
             print("使用OpenCV的SIFT算法")
@@ -300,7 +299,7 @@ def analyze_matching_quality(matches, kp1, kp2):
 
 def comprehensive_matching(img1_path, img2_path, use_my_sift=True, 
                           ratio_threshold=0.75, output_dir="output_comprehensive",
-                          fast_mode=False, visualize_pyramids_flag=True):
+                          visualize_pyramids_flag=True):
     """
     完整的SIFT匹配分析流程
     
@@ -310,12 +309,10 @@ def comprehensive_matching(img1_path, img2_path, use_my_sift=True,
         use_my_sift: 是否使用自实现的SIFT
         ratio_threshold: ratio test阈值
         output_dir: 输出目录
-        fast_mode: 快速模式（减少特征点以加速）
         visualize_pyramids_flag: 是否可视化金字塔（耗时操作）
     """
     print("=" * 70)
     print("SIFT图像特征匹配 - 完整分析")
-    print(f"模式: {'快速模式' if fast_mode else '标准模式'}")
     print("=" * 70)
     
     # 读取图像
@@ -333,7 +330,7 @@ def comprehensive_matching(img1_path, img2_path, use_my_sift=True,
     output_path.mkdir(exist_ok=True)
     
     # 创建匹配器
-    matcher = SIFTMatcher(ratio_threshold=ratio_threshold, use_my_sift=use_my_sift, fast_mode=fast_mode)
+    matcher = SIFTMatcher(ratio_threshold=ratio_threshold, use_my_sift=use_my_sift)
     
     # 检测特征点
     print("\n" + "-" * 70)
@@ -474,33 +471,26 @@ def comprehensive_matching(img1_path, img2_path, use_my_sift=True,
 
 def main():
     """主函数"""
-    img1_path = "/Users/zqli/Desktop/大三上/计算机视觉/code/hw3/SIFT/image1.jpg"
-    img2_path = "/Users/zqli/Desktop/大三上/计算机视觉/code/hw3/SIFT/image2.jpg"
-    
+    img1_path = "hw3/SIFT/image1.jpg"
+    img2_path = "hw3/SIFT/image2.jpg"
+
     if not Path(img1_path).exists() or not Path(img2_path).exists():
         print("错误：找不到图像文件")
         print("请将图像命名为 image1.jpg 和 image2.jpg")
         return
     
     print("\n请选择运行模式：")
-    print("1. 标准模式（完整分析，耗时较长）")
-    print("2. 快速模式（减少特征点，加快速度）")
-    print("3. 极速模式（快速+跳过金字塔可视化）")
+    print("1. 完整分析（包含金字塔可视化，耗时较长）")
+    print("2. 标准模式（跳过金字塔可视化，加快速度）")
     
-    choice = input("\n请输入选择 (1/2/3，默认2): ").strip() or "2"
+    choice = input("\n请输入选择 (1/2，默认1): ").strip() or "1"
     
     if choice == "1":
-        fast_mode = False
         visualize_pyramids_flag = True
-        output_dir = "output_my_sift_standard"
-    elif choice == "2":
-        fast_mode = True
-        visualize_pyramids_flag = True
-        output_dir = "output_my_sift_fast"
-    else:  # choice == "3"
-        fast_mode = True
+        output_dir = "output_my_sift_full"
+    else:  # choice == "2"
         visualize_pyramids_flag = False
-        output_dir = "output_my_sift_ultra_fast"
+        output_dir = "output_my_sift_standard"
     
     # 使用自实现的SIFT进行完整分析
     results = comprehensive_matching(
@@ -509,7 +499,6 @@ def main():
         use_my_sift=True,  # 使用自实现的SIFT
         ratio_threshold=0.75,
         output_dir=output_dir,
-        fast_mode=fast_mode,
         visualize_pyramids_flag=visualize_pyramids_flag
     )
 

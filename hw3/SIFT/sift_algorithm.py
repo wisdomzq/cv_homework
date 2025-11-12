@@ -14,11 +14,11 @@ plt.rcParams['axes.unicode_minus'] = False
 
 
 class MySIFT:
-    """自实现的SIFT算法类（优化版）"""
+    """自实现的SIFT算法类"""
     
     def __init__(self, num_octaves=4, num_scales=5, sigma=1.6, 
                  contrast_threshold=0.04, edge_threshold=10, 
-                 lambda_ori=1.5, lambda_desc=6, fast_mode=False):
+                 lambda_ori=1.5, lambda_desc=6):
         """
         初始化SIFT检测器
         
@@ -30,16 +30,14 @@ class MySIFT:
             edge_threshold: 边缘响应阈值
             lambda_ori: 方向分配时的窗口大小系数
             lambda_desc: 描述符计算时的窗口大小系数
-            fast_mode: 快速模式（减少特征点数量以加速）
         """
         self.num_octaves = num_octaves
         self.num_scales = num_scales
         self.sigma = sigma
-        self.contrast_threshold = contrast_threshold if not fast_mode else contrast_threshold * 2
+        self.contrast_threshold = contrast_threshold
         self.edge_threshold = edge_threshold
         self.lambda_ori = lambda_ori
         self.lambda_desc = lambda_desc
-        self.fast_mode = fast_mode
         
         # 计算高斯模糊的sigma值
         self.k = 2 ** (1.0 / (num_scales - 3))
@@ -291,7 +289,7 @@ class MySIFT:
     
     def compute_descriptors(self, keypoints, gaussian_pyramid):
         """
-        为每个关键点计算128维SIFT描述符（优化版）
+        为每个关键点计算128维SIFT描述符
         
         Args:
             keypoints: 带方向的关键点
