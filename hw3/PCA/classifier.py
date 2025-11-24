@@ -246,7 +246,8 @@ class PCAExpressionRecognizer:
         
         print("\n混淆矩阵:")
         if self.label_names is not None:
-            print(f"{'实际\\预测':<15}", end="")
+            header = "实际\\预测"
+            print(f"{header:<15}", end="")
             for name in self.label_names:
                 print(f"{name[:10]:<12}", end="")
             print()

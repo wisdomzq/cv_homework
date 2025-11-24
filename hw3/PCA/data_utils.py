@@ -52,7 +52,7 @@ def load_facial_expression_dataset(data_dir, image_size=(48, 48)):
     for label_idx, class_name in enumerate(class_dirs):
         class_path = os.path.join(data_dir, class_name)
         image_files = [f for f in os.listdir(class_path) 
-                      if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
+                      if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.tif'))]
         
         print(f"加载类别 '{class_name}': {len(image_files)} 张图像")
         
