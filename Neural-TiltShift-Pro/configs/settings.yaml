@@ -1,0 +1,15 @@
+model:
+  depth_type: "MiDaS_small"  # Options: DPT_Large, DPT_Hybrid, MiDaS_small
+  device: "auto"             # auto, cuda, mps, cpu
+
+rendering:
+  default_focus_depth: 0.6
+  default_blur_radius: 15
+  default_saturation_boost: 1.4
+  default_value_boost: 1.1
+  bokeh_threshold: 200
+  bokeh_intensity: 1.5
+
+video:
+  smoothing_window: 5        # Rolling average window size
+  output_fps: 30
